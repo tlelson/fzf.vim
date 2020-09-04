@@ -1016,6 +1016,21 @@ function! fzf#vim#marks(...)
 endfunction
 
 " ------------------------------------------------------------------
+" Jumps
+" ------------------------------------------------------------------
+
+function! fzf#vim#jumps(...)
+  redir => cout
+  silent marks
+  redir END
+  let list = split(cout, "\n")
+  return s:fzf('jumps', {
+  \ 'source':  extend(list[0:0], map(list[1:], 's:format_mark(v:val)')),
+  \ 'sink*':   s:function('s:mark_sink'),
+  \ 'options': '+m -x --ansi --tiebreak=index --header-lines 1 --tiebreak=begin --prompt "Jumps> "'}, a:000)
+endfunction
+
+" ------------------------------------------------------------------
 " Help tags
 " ------------------------------------------------------------------
 function! s:helptag_sink(line)
